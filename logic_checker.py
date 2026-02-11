@@ -2,8 +2,7 @@ import re
 
 def perform_security_scan(url):
     """
-    Intha function thaan URL-ai analyze panni 
-    results-ai thirumba tharum.
+    This function analysis the URLs and give the result 
     """
     analysis_report = {
         "is_safe": True,
@@ -42,5 +41,6 @@ def perform_security_scan(url):
         analysis_report["warnings"].append("Insecure connection (HTTP instead of HTTPS).")
         analysis_report["risk_score"] += 3
         analysis_report["is_safe"] = False
+
 
     return analysis_report
