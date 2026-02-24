@@ -25,15 +25,15 @@ def get_forensic_trust_index(user_url):
     findings = []
     takeaways = []
     
-    # 🌟 THE STEALTH VIP FLAG (Internal Use Only)
+    # 🌟 INTERNAL VIP FLAG (Hidden from user)
     is_trusted_giant = False 
 
     if not user_url or not str(user_url).strip():
-        return {"FTI": 0, "Status": "❌ EMPTY", "Findings": ["❌ No URL provided"], "Takeaways": ["💡 Please enter a valid URL to scan."]}
+        return {"FTI": 0, "Status": "❌ EMPTY", "Findings": ["❌ No link provided"], "Takeaways": ["💡 Please paste a link to scan."]}
 
     logging.info(f"Scan initiated for Target: {user_url}")
 
-    # --- 1. BASIC URL PARSING & A05 INJECTION CHECK ---
+    # --- 1. BASIC URL PARSING ---
     try:
         clean_url = str(user_url).strip().lower()
         if not clean_url.startswith(('http://', 'https://')):
@@ -46,51 +46,51 @@ def get_forensic_trust_index(user_url):
 
         if not re.match(r"^[a-zA-Z0-9.-]+$", domain):
              logging.warning(f"Injection Attempt Blocked: {domain}")
-             return {"FTI": 0, "Status": "❌ INVALID", "Findings": ["❌ Invalid Domain Characters"], "Takeaways": ["💡 URL contains invalid characters."]}
+             return {"FTI": 0, "Status": "❌ INVALID", "Findings": ["❌ Link contains bad characters"], "Takeaways": ["💡 The link looks broken or unsafe."]}
              
     except Exception:
-        return {"FTI": 0, "Status": "❌ INVALID", "Findings": ["❌ URL Parsing Failed"], "Takeaways": ["💡 Please enter a valid URL."]}
+        return {"FTI": 0, "Status": "❌ INVALID", "Findings": ["❌ Could not read the link"], "Takeaways": ["💡 Please check the link and try again."]}
 
-    # --- 2. OWASP A01: POLICY BLOCKER ---
+    # --- 2. POLICY BLOCKER ---
     if domain.endswith('.gov') or domain.endswith('.gov.in') or domain.endswith('.mil'):
         logging.warning(f"Access Control Block: {domain}")
         return {
-            "FTI": 0, "Status": "🛑 ACCESS DENIED", 
-            "Findings": ["🚨 Execution Blocked: Restricted Government/Military Asset"], 
-            "Takeaways": ["💡 OWASP A01 Policy: Sentinel-AI restricts scanning of high-security domains."]
+            "FTI": 0, "Status": "🛑 RESTRICTED", 
+            "Findings": ["🚨 Scanning Blocked: Government Website"], 
+            "Takeaways": ["💡 For safety, we do not scan official government or military websites."]
         }
 
-    # --- 3. LAYER 1: THE HYBRID STEALTH ENGINE ---
+    # --- 3. LAYER 1: KNOWN THREAT CHECK ---
     db_report = check_blacklist(clean_url)
     
     if db_report["score"] > 0:
         total_risk_score += db_report["score"]
-        # 🔒 CIA FIX: Obfuscated exact DB match reasons
-        findings.append(f"🚨 Known Threat Intelligence Signature Detected")
+        # SIMPLE ENGLISH:
+        findings.append(f"🚨 Warning: This site is in our list of known bad sites")
         if db_report["is_phishing"]:
-            takeaways.append(f"💡 CRITICAL: Our heuristic engine identified malicious behavioral patterns on this site.")
+            takeaways.append(f"💡 DANGER: This website is confirmed as dangerous/phishing.")
     else:
-        # 🔒 CIA FIX: Hidden the word "database"
-        findings.append("✅ Primary Threat Heuristics Passed")
+        # SIMPLE ENGLISH:
+        findings.append("✅ Basic safety check passed")
         
-        # Internal Flag Setting (Never exposed to UI)
+        # Internal Flag
         if "Trusted domain" in db_report.get("reason", ""):
             is_trusted_giant = True 
 
-    # --- 4. LAYER 2: DEEP FORENSICS (Infrastructure Analysis) ---
+    # --- 4. LAYER 2: DEEP SCAN ---
     
-    # OWASP A06 (SSRF) & A10 (Network Exception Handling)
+    # Internal Security (SSRF)
     try:
         resolved_ip = socket.gethostbyname(domain)
         if resolved_ip.startswith(("127.", "10.", "192.168.")) or domain in ["localhost"]:
             logging.critical(f"SSRF Attack Blocked. Target: {domain}")
-            return {"FTI": 0, "Status": "🚫 BLOCKED", "Findings": [f"🚨 DNS Rebinding Attack Blocked!"], "Takeaways": ["💡 Security Firewall: Internal scan blocked."]}
+            return {"FTI": 0, "Status": "🚫 BLOCKED", "Findings": [f"🚨 Blocked internal network access"], "Takeaways": ["💡 Security Alert: You cannot scan local router addresses."]}
     except socket.gaierror:
-        logging.error(f"Network Failure or Offline Target: {domain}")
+        logging.error(f"Network Failure: {domain}")
         return {
-            "FTI": 0, "Status": "📡 OFFLINE / NO NETWORK", 
-            "Findings": ["🚨 Execution Halted: Target Unreachable or Connection Dropped"], 
-            "Takeaways": ["💡 OWASP A10: Sentinel-AI safely aborted the scan because the site is down."]
+            "FTI": 0, "Status": "📡 OFFLINE", 
+            "Findings": ["🚨 Site is unreachable or offline"], 
+            "Takeaways": ["💡 We couldn't connect to this site. It might be down."]
         }
 
     domain_parts = domain.split('.')
@@ -105,17 +105,17 @@ def get_forensic_trust_index(user_url):
     try:
         resolver = dns.resolver.Resolver(); resolver.timeout = 2; resolver.lifetime = 2
         resolver.resolve(root_domain, 'MX')
-        findings.append("✅ Valid Mail Exchange (MX) DNS Records found")
+        # SIMPLE ENGLISH:
+        findings.append("✅ This site has a valid email system")
     except:
         if not is_trusted_giant:
             total_risk_score += 20
-            findings.append("⚠️ No Email (MX) Server Configured")
-            takeaways.append("💡 Suspicious: Real companies usually have email servers configured.")
+            findings.append("⚠️ No email system found for this site")
+            takeaways.append("💡 Suspicious: Real companies usually have official emails.")
         else:
-            # 🔒 CIA FIX: Masked the bypass logic
-            findings.append("✅ Mail Exchange (MX) verified via historical trust metrics")
+            findings.append("✅ Email system verified (Popular Site)")
 
-    # Redirection Hops & Header Forensics (Anti-Clickjacking)
+    # Redirection & Header Security
     try:
         headers = {'User-Agent': 'Sentinel-AI Forensic Scanner v1.0'}
         response = requests.get(clean_url, headers=headers, timeout=5, allow_redirects=True, stream=True)
@@ -124,59 +124,62 @@ def get_forensic_trust_index(user_url):
         if 'X-Frame-Options' not in server_headers and 'Strict-Transport-Security' not in server_headers:
             if not is_trusted_giant:
                 total_risk_score += 15
-                findings.append("⚠️ Missing Anti-Clickjacking (X-Frame-Options) Headers")
-                takeaways.append("💡 Vulnerability Alert: Site lacks basic HTTP security armor.")
+                # SIMPLE ENGLISH:
+                findings.append("⚠️ Site lacks advanced security shields")
+                takeaways.append("💡 Note: This site is missing some modern security protections (Anti-Hacking headers).")
         else:
-            findings.append("✅ Enterprise Security Headers (Anti-Clickjacking) Present")
+            findings.append("✅ Site has strong security shields")
 
         response.close() 
         if len(response.history) > 3:
             total_risk_score += 20
-            findings.append(f"🚨 High Risk: {len(response.history)} Redirection hops")
+            findings.append(f"🚨 High Risk: Site redirects you too many times")
         else:
-            findings.append("✅ Redirection topology is normal")
+            findings.append("✅ Connection path is direct and safe")
     except:
-        findings.append("ℹ️ Connection Timed Out during topology check")
+        findings.append("ℹ️ Could not verify connection path")
 
-    # WHOIS Domain Age
+    # Domain Age (WHOIS)
     try:
         d_info = whois.whois(root_domain)
         creation = d_info.creation_date[0] if isinstance(d_info.creation_date, list) else d_info.creation_date
         age = (datetime.datetime.now() - creation).days
         if age < 180:
             total_risk_score += 30
-            findings.append(f"🚨 Domain is too new ({age} days old)")
-            takeaways.append("💡 Zero-Day Alert: Hackers use freshly registered domains to escape detection.")
+            # SIMPLE ENGLISH:
+            findings.append(f"🚨 This website is very new ({age} days old)")
+            takeaways.append("💡 Be Careful: Scammers often use brand new websites.")
         else:
-            findings.append(f"✅ Domain age is stable ({age} days old)")
+            findings.append(f"✅ Website is established and old ({age} days)")
     except:
         if is_trusted_giant:
-            # 🔒 CIA FIX: Masked the bypass logic
-            findings.append("✅ Domain identity verified via established trust network")
+            findings.append("✅ Verified as a popular, trusted website")
         else:
             total_risk_score += 20
-            findings.append("⚠️ No WHOIS record found")
+            findings.append("⚠️ Could not find website owner details")
 
-    # SSL Certificate Integrity
+    # SSL (Lock Icon)
     try:
         context = ssl.create_default_context()
         with socket.create_connection((domain, 443), timeout=5) as sock:
             with context.wrap_socket(sock, server_hostname=domain) as ssock:
                 cert = ssock.getpeercert()
                 issuer = dict(x[0] for x in cert['issuer']).get('organizationName', 'Unknown CA')
-                findings.append(f"✅ Valid SSL active (Issued by: {issuer})")
+                # SIMPLE ENGLISH:
+                findings.append(f"✅ Secure Connection (HTTPS) is active")
     except:
         total_risk_score += 30
-        findings.append("🚨 SSL Certificate missing or MITM Detected")
-        takeaways.append("💡 Look for the Lock: No HTTPS means unencrypted, dangerous connection.")
+        findings.append("🚨 Connection is NOT secure (No HTTPS)")
+        takeaways.append("💡 Danger: Never enter passwords here. Your data can be stolen.")
 
-    # --- 5. FINAL SCORE CALCULATION ---
+    # --- 5. FINAL SCORE ---
     fti_score = max(0, 100 - total_risk_score)
     status = "🌟 TRUSTED" if fti_score >= 80 else "⚠️ SUSPICIOUS" if fti_score >= 50 else "🛑 HIGH RISK"
 
     if fti_score >= 80 and not takeaways:
-        takeaways.append("💡 Pro-Tip: Even if a site is trusted, never share OTPs or passwords via email links.")
+        takeaways.append("💡 Pro-Tip: Even if a site is safe, never share OTPs or passwords via email links.")
 
     logging.info(f"Scan Complete for {domain}. FTI Score: {fti_score}")
 
     return {"FTI": fti_score, "Status": status, "Findings": findings, "Takeaways": takeaways}
+
