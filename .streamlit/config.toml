@@ -22,4 +22,5 @@ toolbarMode = "minimal"
 
 # THE ULTIMATE FIX FOR INFORMATION DISCLOSURE:
 # If our backend crashes, it WILL NOT show our PC folder paths or code to the hacker!
+
 showErrorDetails = false
