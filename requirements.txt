@@ -1,0 +1,8 @@
+streamlit
+requests
+pandas
+dnspython
+python-whois
+beautifulsoup4
+imagehash
+Pillow
