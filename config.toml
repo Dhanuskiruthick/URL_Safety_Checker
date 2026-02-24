@@ -1,0 +1,25 @@
+# ==========================================
+# SENTINEL-AI: STREAMLIT SECURITY HARDENING
+# ==========================================
+
+[server]
+# Blocks Cross-Origin Resource Sharing (CORS) attacks
+enableCORS = true
+
+# Enables Cross-Site Request Forgery (XSRF) protection
+enableXsrfProtection = true
+
+# Hides the server signature and runs cleanly
+headless = true
+
+[browser]
+# Stops Streamlit from sending our data to their analytics servers
+gatherUsageStats = false
+
+[client]
+# VERY IMPORTANT: Hides the "Deploy" and "Developer Options" from normal users
+toolbarMode = "minimal"
+
+# THE ULTIMATE FIX FOR INFORMATION DISCLOSURE:
+# If our backend crashes, it WILL NOT show our PC folder paths or code to the hacker!
+showErrorDetails = false
