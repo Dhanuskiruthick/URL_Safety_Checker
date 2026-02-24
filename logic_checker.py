@@ -25,7 +25,7 @@ def get_forensic_trust_index(user_url):
     findings = []
     takeaways = []
     
-    # 🌟 NEW: THE ENTERPRISE VIP FLAG
+    # 🌟 THE ENTERPRISE VIP FLAG
     is_trusted_giant = False 
 
     if not user_url or not str(user_url).strip():
@@ -111,10 +111,22 @@ def get_forensic_trust_index(user_url):
         else:
             findings.append("✅ Enterprise MX Verified via Trust Engine")
 
-    # Redirection Hops
+    # Redirection Hops & NEW: Header Forensics (Anti-Clickjacking)
     try:
         headers = {'User-Agent': 'Sentinel-AI Forensic Scanner v1.0'}
         response = requests.get(clean_url, headers=headers, timeout=5, allow_redirects=True, stream=True)
+        
+        # --- 🌟 NEW: ENTERPRISE HEADER FORENSICS (Anti-Clickjacking) ---
+        server_headers = response.headers
+        if 'X-Frame-Options' not in server_headers and 'Strict-Transport-Security' not in server_headers:
+            if not is_trusted_giant:
+                total_risk_score += 15
+                findings.append("⚠️ Missing Anti-Clickjacking (X-Frame-Options) Headers")
+                takeaways.append("💡 Vulnerability Alert: Real enterprise sites use strict security headers. This site lacks basic armor.")
+        else:
+            findings.append("✅ Enterprise Security Headers (Anti-Clickjacking) Present")
+        # -----------------------------------------------------------------
+
         response.close() 
         if len(response.history) > 3:
             total_risk_score += 20
@@ -122,7 +134,7 @@ def get_forensic_trust_index(user_url):
         else:
             findings.append(f"✅ Redirection count is normal")
     except:
-        findings.append("ℹ️ Connection Timed Out during redirection check")
+        findings.append("ℹ️ Connection Timed Out during redirection/header check")
 
     # WHOIS Domain Age
     try:
@@ -136,7 +148,6 @@ def get_forensic_trust_index(user_url):
         else:
             findings.append(f"✅ Domain age is stable ({age} days old)")
     except:
-        # 🌟 VIP BYPASS: DO NOT PENALIZE IF IT'S A KNOWN GIANT!
         if is_trusted_giant:
             findings.append("✅ WHOIS Details Verified via Enterprise DB")
         else:
@@ -166,5 +177,3 @@ def get_forensic_trust_index(user_url):
     logging.info(f"Scan Complete for {domain}. FTI Score: {fti_score}")
 
     return {"FTI": fti_score, "Status": status, "Findings": findings, "Takeaways": takeaways}
-
-
