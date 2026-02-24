@@ -27,4 +27,4 @@ Sentinel-AI is hardened against modern web vulnerabilities:
 2. Install dependencies: `pip install -r requirements.txt`
 3. Launch the Secure Dashboard: `streamlit run app.py`
 
-*Built with passion by Team [Unga Team Name Here] for [Hackathon Name].*
+*Built with passion by Team AURA HACKERS for CYBER CARNIVAL.*
