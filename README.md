@@ -3,9 +3,9 @@
 ![Python Version](https://img.shields.io/badge/Python-3.9+-blue.svg?style=for-the-badge&logo=python)
 ![Framework](https://img.shields.io/badge/Streamlit-UI-FF4B4B.svg?style=for-the-badge&logo=streamlit)
 ![Security Standard](https://img.shields.io/badge/OWASP-Hardened-brightgreen.svg?style=for-the-badge)
-![License](https://img.shields.io/badge/License-MIT-purple.svg?style=for-the-badge)
+![Event](https://img.shields.io/badge/Event-CYBER_CARNIVAL-orange.svg?style=for-the-badge)
 
-
+> **Developed by Team AURA HACKERS** | Enterprise-grade phishing detection that doesn't rely on guesswork—it forensically investigates infrastructure.
 
 ---
 
@@ -53,11 +53,29 @@ No need to hunt for dependencies. Just copy, paste, and run.
 
 **1. Clone the repository**
 ```bash
-git clone [https://github.com/Dhanuskiruthick/URL_Safety_Checker.git](https://github.com/Dhanuskiruthick/URL_Safety_Checker.git)
+git clone https://github.com/Dhanuskiruthick/URL_Safety_Checker.git
 cd URL_Safety_Checker
-## 💻 How to Run Locally
-1. Clone the repository.
-2. Install dependencies: `pip install -r requirements.txt`
-3. Launch the Secure Dashboard: `streamlit run app.py`
+2. Install all required dependencies
 
-*Built with passion by Team AURA HACKERS for CYBER CARNIVAL.*
+Bash
+pip install streamlit pandas requests python-whois dnspython beautifulsoup4 Pillow ImageHash
+3. Launch the Secure Dashboard
+
+Bash
+python -m streamlit run app.py
+🔮 Future Roadmap: Sentinel-AI V2.0
+Our architectural blueprints for the next major release include:
+
+Headless JS De-obfuscation Engine: Integrating Async Playwright to render dynamic sites in a headless Chromium sandbox, calculating the Shannon Entropy of hidden scripts to catch injected malware.
+
+Asynchronous High-Throughput Engine: Migrating the core synchronous analysis network to asyncio and aiohttp for non-blocking concurrent threat intel requests.
+
+Distributed Caching Layer: Deploying an aioredis (Redis) caching layer to achieve ultra-low latency lookups (Time-To-Live logic) for previously verified enterprise domains.
+
+<div align="center">
+<b>Built with 💻 and 🔥 by Team AURA HACKERS for CYBER CARNIVAL.</b>
+
+
+
+<i>Empowering users to navigate the web safely.</i>
+</div>
