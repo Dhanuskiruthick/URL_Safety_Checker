@@ -170,11 +170,16 @@ def map_risk_tier(score):
 # MAIN CHECK FUNCTION (FINAL CALIBRATED)
 def check_blacklist(user_url):
     normalized_url = normalize_url(user_url)
+    
+    # 🌟 FIX 1: Extract root domain to catch subdomains (e.g., gemini.google.com -> google.com)
+    parts = normalized_url.split('.')
+    root_domain = ".".join(parts[-2:]) if len(parts) > 1 else normalized_url
+
     raw_score = 0
     reasons = []
 
-    # 1. Whitelist
-    if normalized_url in _legit_domains:
+    # 1. Whitelist (Now checks both exact subdomain and root domain!)
+    if normalized_url in _legit_domains or root_domain in _legit_domains:
         return {
             "is_phishing": False,
             "score": 0,
@@ -217,14 +222,14 @@ def check_blacklist(user_url):
     if keyword_hits:
         reasons.append("Suspicious keywords detected")
 
-    # 7. Structural signals
-    if len(user_url) > 75:
+    # 7. Structural signals (🌟 FIX 2: Check ONLY the domain length, not the full URL)
+    if len(normalized_url) > 45: 
         raw_score += 10
-        reasons.append("Long URL")
+        reasons.append("Unusually long domain name")
 
-    if user_url.count("-") > 4:
+    if normalized_url.count("-") > 3:
         raw_score += 10
-        reasons.append("Excessive hyphens")
+        reasons.append("Excessive hyphens in domain")
 
     # FINAL SIGMOID CALIBRATION
     calibrated_score = int(100 * (1 - math.exp(-raw_score / 75)))
