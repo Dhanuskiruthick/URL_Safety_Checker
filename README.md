@@ -5,7 +5,7 @@
 ![Security Standard](https://img.shields.io/badge/OWASP-Hardened-brightgreen.svg?style=for-the-badge)
 ![License](https://img.shields.io/badge/License-MIT-purple.svg?style=for-the-badge)
 
-> **Developed by RootGuard Labs** | Enterprise-grade phishing detection that doesn't rely on guesswork—it forensically investigates infrastructure.
+
 
 ---
 
