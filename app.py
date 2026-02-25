@@ -1,5 +1,5 @@
 import streamlit as st
-from logic_code import get_forensic_trust_index
+from logic_checker import get_forensic_trust_index
 import time
 
 # --- PAGE CONFIGURATION ---
@@ -230,3 +230,4 @@ if scan_btn:
                 else: st.error(f"`🚨 {cln}`")
                 
         st.markdown('</div>', unsafe_allow_html=True)
+
