@@ -1,81 +1,79 @@
 # 🛡️ Sentinel-AI: Zero-Trust URL Forensic Analyzer
 
+**Team AURA HACKERS | Cyber Carnival 2026**
+
 ![Python Version](https://img.shields.io/badge/Python-3.9+-blue.svg?style=for-the-badge&logo=python)
 ![Framework](https://img.shields.io/badge/Streamlit-UI-FF4B4B.svg?style=for-the-badge&logo=streamlit)
 ![Security Standard](https://img.shields.io/badge/OWASP-Hardened-brightgreen.svg?style=for-the-badge)
 ![Event](https://img.shields.io/badge/Event-CYBER_CARNIVAL-orange.svg?style=for-the-badge)
 
-> **Developed by Team AURA HACKERS** | Enterprise-grade phishing detection that doesn't rely on guesswork—it forensically investigates infrastructure.
+> *Traditional URL checkers ask: "Is this URL known?" Sentinel-AI asks: "Is this infrastructure trustworthy?"*
+> **Trust Nothing. Verify Everything.**
 
 ---
 
-## 📖 Executive Summary
+## 🚨 The Zero-Day Detection Gap
+Phishing attacks are evolving faster than blacklist databases. When attackers register a fresh domain, deploy a cloned login page, and add a valid SSL certificate, most detection tools fail because the domain is not yet reported. This creates a critical **Zero-Day Detection Gap**.
 
-Traditional phishing detectors rely heavily on static blacklists or text-based Machine Learning models. When threat actors launch **Zero-Day Attacks** using freshly registered domains, traditional tools fail because the URL isn't in their database yet. 
-
-**Sentinel-AI introduces a paradigm shift.** Built on a **Zero-Trust Architecture**, it actively interrogates a target's server infrastructure, DNS configurations, cryptographic certificates, and visual assets in real-time to determine authenticity.
-
----
-
-## 🏗️ Core Architecture (The 3-Layer Engine)
-
-### 1️⃣ Layer 1: Threat Intelligence & Heuristics
-Before touching the live web, the engine analyzes the URL structure:
-* **Live Feed Integration:** Cross-references URLs against localized datasets and open-source threat feeds.
-* **Cryptographic De-Obfuscation:** Detects Typosquatting and Homoglyph (Punycode/Lookalike) attacks using perceptual math algorithms.
-* **TLD Risk Scoring:** Penalizes domains utilizing high-risk top-level extensions (e.g., `.xyz`, `.top`, `.zip`).
-
-### 2️⃣ Layer 2: Deep Infrastructure Forensics
-The engine acts as an automated penetration tester:
-* **DNS MX Topology:** Verifies the existence of a Mail Exchange server (threat actors rarely configure corporate email infrastructure).
-* **WHOIS Zero-Day Check:** Pulls domain registration age live to flag highly volatile domains created within the last 180 days.
-* **Security Header Analysis:** Checks for anti-clickjacking armor (`X-Frame-Options`, `Strict-Transport-Security`).
-* **SSL/TLS Integrity:** Validates cryptographic certificates to ensure data encryption.
-
-### 3️⃣ Layer 3: Visual Cryptographic AI
-* **Visual Identity Theft Detection:** Employs `imagehash` (Perceptual pHash) to fetch target favicons and compute bit-distance against official enterprise brand assets, catching spoofing attempts even if the text appears safe.
+## 💡 Our Solution
+Sentinel-AI is a **Zero-Trust Infrastructure-Based Phishing Detection Engine**. Instead of checking reputation alone, it performs live forensic interrogation of DNS topology, WHOIS registration age, SSL/TLS certificate integrity, HTTP security headers, and visual brand spoofing. **It does not trust. It verifies.**
 
 ---
 
-## 🔒 OWASP Top 10 (2025) Hardened
+## 🏗️ The 3-Layer Defense Engine
 
-Sentinel-AI is secured against critical enterprise vulnerabilities:
-* **A01 (Broken Access Control):** Policy-level restrictions prevent the scanning of high-security `.gov` and `.mil` assets.
-* **A02 (Security Misconfiguration):** Streamlit developer modes and error tracebacks are strictly obfuscated via `config.toml` to prevent Server Information Disclosure.
-* **A06 (SSRF Blocked):** Built-in IP Socket Firewall actively blocks internal network routing (e.g., preventing scans on `127.0.0.1` or `localhost`).
-* **A10 (Unrestricted Resource Consumption):** Implements strict network timeouts and graceful exception handling for offline targets.
+### 1. Structural Threat Heuristics
+Before network calls, we analyze the URL itself.
+* **Typosquatting & Homoglyph Analysis:** Catches Punycode and lookalike attacks.
+* **Suspicious Keyword Detection:** Flags common phishing terminology.
+* **High-Risk TLD Scoring:** Penalizes extensions like `.xyz`, `.top`, `.zip`.
+* **Threat Intelligence Cross-Check:** Validates against known malicious feeds.
+
+### 2. Deep Infrastructure Forensics
+Sentinel-AI behaves like an automated SOC analyst interrogating the server.
+* **MX Record Verification:** Phishing domains rarely configure legitimate corporate email servers.
+* **Domain Age Analysis:** Flags highly volatile domains registered within the last 180 days.
+* **Security Header Inspection:** Checks for X-Frame-Options, Strict-Transport-Security, and Content-Security-Policy.
+* **SSL/TLS Validation:** Ensures valid, non-expired certificates with proper encryption handshakes.
+
+### 3. Visual Cryptographic AI (Favicon Spoofing)
+Attackers often clone brand visuals perfectly. We combat this by fetching the target's favicon, generating a **perceptual hash (pHash)**, and computing the Hamming distance against verified brand assets.
 
 ---
 
-## ⚙️ Quick Start & Installation
+## 🔐 Security by Design (OWASP 2025 Aligned)
+* **[A01] Broken Access Control:** Blocks scanning of sensitive .gov and .mil domains.
+* **[A06] SSRF Protection:** Internal IP ranges (127.0.0.1, RFC1918) are strictly blocked.
+* **[A10] Resource Exhaustion:** Strict network timeouts prevent denial-of-service via slow endpoints.
+* **[A02] Security Misconfiguration:** Production-ready configuration disables debug leaks.
 
-No need to hunt for dependencies. Just copy, paste, and run.
+---
 
-**1. Clone the repository**
-```bash
-git clone https://github.com/Dhanuskiruthick/URL_Safety_Checker.git
-cd URL_Safety_Checker
-2. Install all required dependencies
+## ⚙️ Quick Setup (One-Click Run)
 
-Bash
-pip install streamlit pandas requests python-whois dnspython beautifulsoup4 Pillow ImageHash
-3. Launch the Secure Dashboard
+Copy and paste the following single command into your terminal to automatically clone the repo, install dependencies, and launch the forensic engine:
 
-Bash
-python -m streamlit run app.py
-🔮 Future Roadmap: Sentinel-AI V2.0
-Our architectural blueprints for the next major release include:
 
-Headless JS De-obfuscation Engine: Integrating Async Playwright to render dynamic sites in a headless Chromium sandbox, calculating the Shannon Entropy of hidden scripts to catch injected malware.
+git clone https://github.com/Dhanuskiruthick/URL_Safety_Checker.git && cd URL_Safety_Checker && pip install streamlit pandas requests python-whois dnspython beautifulsoup4 Pillow ImageHash && python -m streamlit run app.py
 
-Asynchronous High-Throughput Engine: Migrating the core synchronous analysis network to asyncio and aiohttp for non-blocking concurrent threat intel requests.
+---
 
-Distributed Caching Layer: Deploying an aioredis (Redis) caching layer to achieve ultra-low latency lookups (Time-To-Live logic) for previously verified enterprise domains.
+🚀 Scalability Roadmap (Post-Hackathon)
+Headless JS Sandbox: Render dynamic phishing kits using Playwright and entropy analysis.
+
+Async Architecture: Move to asyncio + aiohttp for concurrent large-scale scanning.
+
+Redis Caching Layer: Ultra-low latency revalidation of trusted enterprise domains.
+
+API Deployment: Convert engine into a REST API for SOC and enterprise integration.
 
 <div align="center">
-<b>Built with 💻 and 🔥 by Team AURA HACKERS for CYBER CARNIVAL.</b>
+🛡 Team AURA HACKERS
+Cyber Carnival 2026
 
+Trust Nothing. Verify Everything.
 
-
-<i>Empowering users to navigate the web safely.</i>
 </div>
+
+
+                                                                       
